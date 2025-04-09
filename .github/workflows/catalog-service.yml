@@ -6,6 +6,7 @@ on:
       - catalog-service/**
     branches:
       - '**'
+  workflow_dispatch:  # for manually running github actions
 #  pull_request:
 #    branches: [main]
 
