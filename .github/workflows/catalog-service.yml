@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       working-directory: ./catalog-service
-#      DOCKER_IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/bookstore-catalog-service
+    #      DOCKER_IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/bookstore-catalog-service
     defaults:
       run:
         working-directory: ${{ env.working-directory }}
@@ -43,9 +43,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - if: ${{github.ref  == 'refs/heads/main'}}
-        name: Build and Publish Docker Image
+      - name: Build and Push Docker Image
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           ./mvnw spring-boot:build-image -DskipTests
-          echo "Pushing the image ${{secrets.DOCKERHUB_USERNAME}}/bookstore-catalog-service to Docker Hub..."
-          docker push ${{secrets.DOCKERHUB_TOKEN}}/bookstore-catalog-service
+          docker tag bookstore-catalog-service ${{ secrets.DOCKERHUB_USERNAME }}/bookstore-catalog-service:latest
+          echo "Pushing image to Docker Hub..."
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/bookstore-catalog-service:latest
